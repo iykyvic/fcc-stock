@@ -17,8 +17,8 @@ debug('fccstocks:app');
 Logger.useDefaults();
 
 const app = express();
-const { env: { NODE_ENV, PORT } } = process;
-export const defaultStocks = ['CSCO', 'EBAY', 'F', 'FOX', 'GOOGL'];
+const { env: { NODE_ENV, PORT, STOCKS } } = process;
+export const defaultStocks = STOCKS.split(',')|| ['CSCO'];
 const time = formattedYearIntervalFromNow(new Date(), formatDate);
 
 export const isDevMode = NODE_ENV === 'development';
