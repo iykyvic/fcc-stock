@@ -63,6 +63,7 @@ export default function Settings(props) {
 						primaryText={stock}
 						leftCheckbox={<Checkbox
 							checked={stocks[stock].show}
+							disabled={loadingSettings}
 							onCheck={updateStock.bind(null, { name: stock, show: !stocks[stock].show, index })}
 							style={styles.checkbox}
 						/>}
