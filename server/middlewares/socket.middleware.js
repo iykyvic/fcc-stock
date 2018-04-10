@@ -9,7 +9,9 @@ const getStockDataNames = (stocks) => {
 };
 
 const socketIo = (app, server, time, stocks) => {
-  const sio = io(server);
+  const sio = io(server, {
+    origins: `${process.env.HOST_NAME}`
+  });
 
   // middleware
   sio.on('connection', (socket) => {
@@ -84,6 +86,8 @@ const socketIo = (app, server, time, stocks) => {
 				sio.emit('loading', { settings: false });
 			}
 		});
+
+		socket.on('error', console.log.bind(null, [error]));
 	});
 };
 
