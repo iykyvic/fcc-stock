@@ -10,7 +10,7 @@ const getStockDataNames = (stocks) => {
 
 const socketIo = (app, time, stocks) => {
 	const host = process.env.HOST_NAME.replace(/:\d+/, '');
-	const port = isDevMode ? `:${process.env.PORT}` : '*';
+	const port = isDevMode ? `:${process.env.PORT}` : ':*';
   const sio = io(app, {
 		origins: `${host}${port}`,
 		wsEngine: 'ws',
