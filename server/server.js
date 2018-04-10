@@ -42,8 +42,6 @@ const normalizePort = (val) => {
 
 const port = normalizePort(PORT || '3000');
 
-app.server = http.createServer(app);
-
 /**
  * Event listener for HTTP server "error" event.
  * @param {any} error an error message
@@ -74,19 +72,12 @@ const onError = (error) => {
  * Event listener for HTTP server "listening" event.
  * @returns {null} server process is continous here, so no returns
  */
-const onListening = (stocks) => {
-  const addr = app.server.address();
+const onListening = (server) => {
+	const addr = server.address();
   const bind = typeof addr === 'string'
     ? `pipe ${addr}`
-		: `port ${addr.port}`;
-
-	try {
-		socket(app, app.server, time, stocks);
-	} catch (error) {
-		throw error;
-	}
-
-  return Logger.debug(`🚧 App is Listening on ${bind}`);
+    : `port ${addr.port}`;
+  Logger.debug(`🚧 App is Listening on ${bind}`);
 };
 const headers1 = 'Origin, X-Requested-With, Content-Type, Accept';
 const headers2 = ',Authorization, Access-Control-Allow-Credentials';
@@ -126,12 +117,18 @@ if (isDevMode) {
 app.database = database;
 app.database.on('error', () => Logger.info('connection error'));
 app.database.once('open', async () => await getDefaultStockData(defaultStocks, getStockData, time)
-  .then(stocks => app.server.listen(port)
-		.on('listening', onListening.bind(null, stocks))
-		.on('error', onError))
+	.then(async (stocks) => {
+		const server = await app.listen(port);
+		await socket(server, time, stocks);
+
+		return server;
+	})
+	.then(server => server
+	  .on('listening', onListening.bind(null, server))
+		.on('error', onError)))
 	.catch(error => {
 		Logger.log(error.message);
 		return process.exit(1);
-	}));
+	});
 
 export default app;

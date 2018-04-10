@@ -8,8 +8,8 @@ const getStockDataNames = (stocks) => {
 	return stocks.settings.map(setting => setting.name);
 };
 
-const socketIo = (app, server, time, stocks) => {
-  const sio = io(server, {
+const socketIo = (app, time, stocks) => {
+  const sio = io(app, {
     origins: `${process.env.HOST_NAME}`
   });
 
@@ -86,8 +86,6 @@ const socketIo = (app, server, time, stocks) => {
 				sio.emit('loading', { settings: false });
 			}
 		});
-
-		socket.on('error', console.log.bind(null, [error]));
 	});
 };
 
