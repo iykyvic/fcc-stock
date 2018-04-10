@@ -9,7 +9,12 @@ const getStockDataNames = (stocks) => {
 };
 
 const socketIo = (app, time, stocks) => {
-  const sio = io(app);
+	const host = process.env.HOST_NAME.replace(/:\d+/, '')
+  const sio = io(app, {
+		origins: `${host}:${server.address().port}`,
+		wsEngine: 'ws',
+    transports: ['websocket', 'polling']
+  });
 
   // middleware
   sio.on('connection', (socket) => {
