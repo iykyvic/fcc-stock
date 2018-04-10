@@ -11,7 +11,9 @@ import Chart from './Chart';
 
 export default class Stock extends Component {
 	defaultStocks = ['CSCO', 'EBAY', 'F', 'FOX', 'GOOGL'];
-	socketIo = io(HOST_NAME);
+	socketIo = io(HOST_NAME, {
+		secure: NODE_ENV === 'production'
+	});
 	state = {
 		stocks: {},
 		loadingSettings: false,

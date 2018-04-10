@@ -40,7 +40,8 @@ const config = {
 	plugins: [
     new webpack.DefinePlugin({
       API_URL: JSON.stringify(`${HOST_NAME}/api/v1/`),
-      HOST_NAME: JSON.stringify(`${HOST_NAME}`)
+			HOST_NAME: JSON.stringify(`${HOST_NAME}`),
+			NODE_ENV: JSON.stringify(`${NODE_ENV}`)
     }),
     new HtmlWebpackPlugin({
 			title: 'FCC STOCK',
