@@ -2,7 +2,7 @@ import io from 'socket.io';
 import { Stock } from '../models';
 import { getStockData, deleteStockSetting } from '../controllers/stock.controller';
 import { formattedYearIntervalFromNow, formatDate } from './index';
-import { defaultStocks } from '../server';
+import { defaultStocks, isDevMode } from '../server';
 
 const getStockDataNames = (stocks) => {
 	return stocks.settings.map(setting => setting.name);
@@ -10,8 +10,9 @@ const getStockDataNames = (stocks) => {
 
 const socketIo = (app, time, stocks) => {
 	const host = process.env.HOST_NAME.replace(/:\d+/, '');
+	const port = isDevMode ? `:${process.env.PORT}` : '';
   const sio = io(app, {
-		origins: `${host}:${process.env.PORT}`,
+		origins: `${host}${port}`,
 		wsEngine: 'ws',
     transports: ['websocket', 'polling']
 	});
