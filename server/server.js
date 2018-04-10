@@ -118,14 +118,14 @@ app.database = database;
 app.database.on('error', () => Logger.info('connection error'));
 app.database.once('open', async () => await getDefaultStockData(defaultStocks, getStockData, time)
 	.then(async (stocks) => {
-		const server = await app.listen(port);
+		const server = http.createServer(app);
 		await socket(server, time, stocks);
 
 		return server;
 	})
 	.then(server => server
 	  .on('listening', onListening.bind(null, server))
-		.on('error', onError)))
+		.on('error', onError).listen(port)))
 	.catch(error => {
 		Logger.log(error.message);
 		return process.exit(1);
