@@ -23,7 +23,8 @@ const socketIo = (app, time, stocks) => {
 
 		socket.on('update', async (data) => {
 			try {
-				sio.emit('loading', { settings: true });
+				sio.emit('loadingForm', { loadingForm: true });
+				sio.emit('loadingSettings', { loadingSettings: true });
 				const { settings } = stocks;
 				const { name, show, index } = data;
 				const validData = !settings.every(setting => setting.name !== name);
@@ -39,15 +40,16 @@ const socketIo = (app, time, stocks) => {
 			} catch (error) {
 				socket.emit('serverMessage', error.message);
 			} finally {
-				sio.emit('loading', { settings: false });
+				sio.emit('loadingForm', { loadingForm: false });
+				sio.emit('loadingSettings', { loadingSettings: false });
 			}
 		});
 
 		socket.on('add', async (stock) => {
 			try {
-				stock = stock.toUpperCase();
 				sio.emit('loadingForm', { loadingForm: true });
 				sio.emit('loadingSettings', { loadingSettings: true });
+				stock = stock.toUpperCase();
 				if (getStockDataNames(stocks).includes(stock)) {
 					throw new Error('has been added, if disabled, you can enable it.');
 				}
@@ -70,6 +72,8 @@ const socketIo = (app, time, stocks) => {
 
 		socket.on('delete', async (stock) => {
 			try {
+				sio.emit('loadingForm', { loadingForm: false });
+				sio.emit('loadingSettings', { loadingSettings: false });
 				const stockNames = getStockDataNames(stocks);
 				if (!stockNames.includes(stock)) {
 					throw new Error('this stock is not present or valid');
@@ -87,7 +91,8 @@ const socketIo = (app, time, stocks) => {
 			} catch (error) {
 				socket.emit('serverMessage', error.message);
 			} finally {
-				sio.emit('loading', { settings: false });
+				sio.emit('loadingForm', { loadingForm: false });
+				sio.emit('loadingSettings', { loadingSettings: false });
 			}
 		});
 	});
