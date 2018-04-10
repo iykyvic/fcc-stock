@@ -7,7 +7,6 @@ import logger            from 'morgan';
 import Logger            from 'js-logger';
 import bodyParser        from 'body-parser';
 import http              from 'http';
-import https             from 'https';
 import { database }      from './models';
 import { devMiddleware, socket } from './middlewares';
 import { formattedYearIntervalFromNow, formatDate } from './middlewares';
@@ -43,7 +42,7 @@ const normalizePort = (val) => {
 
 const port = normalizePort(PORT || '3000');
 
-app.server = isDevMode ? http.createServer(app) : https.createServer(app);
+app.server = http.createServer(app);
 
 /**
  * Event listener for HTTP server "error" event.
